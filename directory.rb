@@ -6,14 +6,14 @@ def input_students
 
   students = []
 
-  name = gets.chomp
+  name = gets.chomp.capitalize
 
   while !name.empty? do
     students << {name: name, cohort: :november}
     puts "Now we have #{students.count} students"
-    name = gets.chomp
+    name = gets.chomp.capitalize
   end
-   students
+students
 end
 #and then print them
 def print_header
@@ -33,29 +33,34 @@ def short_names (students, students_with_short_names)
   end
 end
 
-def print_students (students_with_short_names)
-  puts "Would you like to filter students by the letter of their first name?"
-  puts "If so, please enter the letter, otherwise hit enter"
-  letter = gets.chomp
-#If user has entered a letter want to get students array of hashes and access first hash of array
-#access name key and ask whether the string starts with letter puts only those names
-#PROBLEM - probably don't want print_footer when filtering, OR want a different footer that counts those with partic letter.
-    if !letter.empty?
-      students_with_short_names.each_with_index do |student, i|
-        if student[:name].start_with?(letter)
-           puts "#{i+1}. #{student[:name]} (#{student[:cohort]} cohort)"
+def print_students (student_array)
+ puts "Would you like to filter students by the letter of their first name?"
+ puts "If so, please enter the letter, otherwise hit enter"
+ letter = gets.chomp.upcase
+ 	if !letter.empty?
+  		filter_by_letter(student_array, letter)
+  else
+		counter = 0
+		while student_array.length >= counter+1
+			puts "#{counter+1}. #{student_array[0+counter][:name]} (#{student_array[0+counter][:cohort]} cohort)"
+			counter+=1
+		end
+	end
+end
+
+def filter_by_letter(student_array, letter)
+	counter = 0
+	while student_array.length >= counter+1
+		if student_array[counter][:name].start_with?(letter)
+           puts "#{counter+1}. #{student_array[0+counter][:name]} (#{student_array[0+counter][:cohort]} cohort)"
         end
-      end
-    else
-      students_with_short_names.each_with_index do |student, i|
-      puts "#{i+1}. #{student[:name]} (#{student[:cohort]} cohort)"
-      end
+    counter+=1
     end
 end
 #FInally we print the overall total of students
 def print_footer(students)
   print "Overall, we have #{students.count} great students, but above are those "
-  puts "with names of less than 12 characters and/or those students filtered by the letter of their first name."
+  puts "with names of less than 12 characters (and filtered first name letter if you selected that option)."
 end
 
 students = input_students
