@@ -3,14 +3,17 @@
 def input_students
   puts "Please enter name followed by cohort month, to finish just hit return twice".center(120)
   puts "Please enter the name of the student".center(120)
-   name = gets.chomp.capitalize
+   name = gets.capitalize
+   name = name.gsub(/\n/," ").strip
+
 
 	students = []
 	date_correct = false
 
 	while date_correct == false
 	 	puts "Please enter a cohort month using no abbreviations".center(120)
-  		cohort = gets.chomp.capitalize
+  		cohort = gets.capitalize
+      cohort = cohort.gsub(/\n/," ").strip
 		require 'date'
       if Date::MONTHNAMES.include? cohort
  	 			date_correct = true
@@ -21,15 +24,24 @@ def input_students
 
 	while !name.empty?
     	students << {name: name, cohort: cohort.to_sym}
-    	puts "Now we have #{students.count} students".center(120)
-    	puts "Please enter the name of the student".center(120)
-    	name = gets.chomp.capitalize
+        if students.length == 1
+          puts "Now we have #{students.count} student".center(120)
+          puts "Please enter the name of the student".center(120)
+          name = gets.capitalize
+          name = name.gsub(/\n/," ").strip
+        else
+          puts "Now we have #{students.count} students".center(120)
+    	    puts "Please enter the name of the student".center(120)
+    	    name = gets.capitalize
+          name = name.gsub(/\n/," ").strip
+        end
     	if name.empty?
     		break
     	end
     		while date_correct == false
 	 			puts "Please enter a cohort month using no abbreviations".center(120)
-  				cohort = gets.chomp.capitalize
+  				cohort = gets.capitalize
+          cohort = cohort.gsub(/\n/," ").strip
 				require 'date'
 					if Date::MONTHNAMES.include? cohort
 						date_correct = true
