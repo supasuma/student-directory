@@ -12,7 +12,7 @@ def input_students
 	 	puts "Please enter a cohort month using no abbreviations".center(120)
   		cohort = gets.chomp.capitalize
 		require 'date'
-			if (Date.parse(cohort) rescue false)
+      if Date::MONTHNAMES.include? cohort
  	 			date_correct = true
 			end
 		end
@@ -31,7 +31,7 @@ def input_students
 	 			puts "Please enter a cohort month using no abbreviations".center(120)
   				cohort = gets.chomp.capitalize
 				require 'date'
-					if (Date.parse(cohort) rescue false)
+					if Date::MONTHNAMES.include? cohort
 						date_correct = true
 					end
 			  end
