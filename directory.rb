@@ -23,7 +23,8 @@ def input_students
 	date_correct = false
 
 	while !name.empty?
-    	@students << {name: name, cohort: cohort.to_sym}
+      students_to_list(name, cohort)
+    	#@students << {name: name, cohort: cohort.to_sym}
         if @students.length == 1
           puts "Now we have #{@students.count} student".center(120)
           puts "Please enter the name of the student".center(120)
@@ -47,6 +48,10 @@ def input_students
 			  end
 			date_correct = false
 	end
+end
+
+def students_to_list (name, cohort)
+  @students << {name: name, cohort: cohort.to_sym}
 end
 
 def interactive_menu
@@ -173,7 +178,8 @@ def load_students (filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
-    @students << {name: name, cohort: cohort.to_sym}
+    students_to_list(name, cohort)
+    #@students << {name: name, cohort: cohort.to_sym}
   end
   file.close
 end
