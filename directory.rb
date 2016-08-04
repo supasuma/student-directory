@@ -6,9 +6,12 @@ def input_students
    name = gets.capitalize
    name = name.gsub(/\n/," ").strip
 
-
 	students = []
 	date_correct = false
+
+  if name.empty?
+    print_students(students)
+  end
 
 	while date_correct == false
 	 	puts "Please enter a cohort month using no abbreviations".center(120)
@@ -78,27 +81,31 @@ def print_students (student_array)
 #  		filter_by_letter(student_array, letter)
 
 #  else
-puts "If you would you like to filter by cohort please type 'yes'".center(120)
-answer = gets.chomp.upcase
-if answer == "YES"
+  if student_array.count == 1
+    puts "#{1}. #{student_array[0][:name]} (#{student_array[0][:cohort]} cohort)".center(120)
+  elsif student_array.count >= 2
+    puts "If you would you like to filter by cohort please type 'yes'".center(120)
+    answer = gets.chomp.upcase
+      if answer == "YES"
+        cohort_groups = []
 
-  cohort_groups = []
+        cohort_groups << student_array.group_by { |student| student[:cohort] }
 
-  cohort_groups << student_array.group_by { |student| student[:cohort] }
-
-  cohort_groups[0].each do |k,v|
-   	 puts k.to_s.capitalize.center(120)
-  		v.each_with_index do |x, i|
-  			puts (x[:name] + " (" + k.to_s.capitalize + " cohort)").center(120)
-  		end
-  end
-
-else
-    counter = 0
-    while student_array.length >= counter+1
-      puts "#{counter+1}. #{student_array[0+counter][:name]} (#{student_array[0+counter][:cohort]} cohort)".center(120)
-      counter+=1
-    end
+          cohort_groups[0].each do |k,v|
+     	        puts k.to_s.capitalize.center(120)
+    		        v.each_with_index do |x, i|
+    			           puts (x[:name] + " (" + k.to_s.capitalize + " cohort)").center(120)
+    		        end
+              end
+      else
+      counter = 0
+        while student_array.length >= counter+1
+          puts "#{counter+1}. #{student_array[0+counter][:name]} (#{student_array[0+counter][:cohort]} cohort)".center(120)
+          counter+=1
+        end
+      end
+  else
+    puts "There are no students to print".center(120)
   end
 end
 
