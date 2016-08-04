@@ -3,7 +3,7 @@
 def input_students
   puts "Please enter name followed by cohort month, to finish just hit return twice".center(120)
   puts "Please enter the name of the student".center(120)
-  name = gets.chomp.capitalize
+  name = STDIN.gets.chomp.capitalize
 
 	date_correct = false
 
@@ -13,7 +13,7 @@ def input_students
 
 	while date_correct == false
 	 	puts "Please enter a cohort month using no abbreviations".center(120)
-  		cohort = gets.chomp.capitalize
+  		cohort = STDIN.gets.chomp.capitalize
 		require 'date'
       if Date::MONTHNAMES.include? cohort
  	 			date_correct = true
@@ -27,18 +27,18 @@ def input_students
         if @students.length == 1
           puts "Now we have #{@students.count} student".center(120)
           puts "Please enter the name of the student".center(120)
-          name = gets.chomp.capitalize
+          name = STDIN.gets.chomp.capitalize
         else
           puts "Now we have #{@students.count} students".center(120)
     	    puts "Please enter the name of the student".center(120)
-    	    name = gets.chomp.capitalize
+    	    name = STDIN.gets.chomp.capitalize
         end
     	if name.empty?
     		break
     	end
     		while date_correct == false
 	 			puts "Please enter a cohort month using no abbreviations".center(120)
-  				cohort = gets.capitalize
+  				cohort = STDIN.gets.capitalize
           cohort = cohort.gsub(/\n/," ").strip
 				require 'date'
 					if Date::MONTHNAMES.include? cohort
@@ -52,7 +52,7 @@ end
 def interactive_menu
   loop do
     print_menu
-    process(gets.chomp)
+    process(STDIN.gets.chomp)
   end
 end
 
@@ -109,7 +109,7 @@ end
 def print_students
 # puts "Would you like to filter students by the letter of their first name?".center(120)
 # puts "If so, please enter the letter, otherwise hit enter".center(120)
-# letter = gets.chomp.upcase
+# letter = STDIN.gets.chomp.upcase
 # 	if !letter.empty?
 #  		filter_by_letter(@students, letter)
 
@@ -118,7 +118,7 @@ def print_students
     puts "1. #{@students[0][:name]} (#{@students[0][:cohort]} cohort)".center(120)
   elsif @students.count >= 2
     puts "If you would you like to filter by cohort please type 'yes', otherwise hit return".center(120)
-    answer = gets.chomp.upcase
+    answer = STDIN.gets.chomp.upcase
       if answer == "YES"
         cohort_groups = []
         puts @students
@@ -133,7 +133,7 @@ def print_students
       else
       counter = 0
         while @students.length >= counter+1
-          puts "#{counter+1}. #{@students[0+counter][:name]} (#{@students[0+counter][:cohort]} cohort)".center(120)
+          puts "#{counter+1}. #{@students[counter][:name]} (#{@students[counter][:cohort]} cohort)".center(120)
           counter+=1
         end
       end
@@ -169,8 +169,8 @@ def save_students
   file.close
 end
 
-def load_students
-  file = File.open("students.csv", "r")
+def load_students (filename = "students.csv")
+  file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     @students << {name: name, cohort: cohort.to_sym}
@@ -178,6 +178,19 @@ def load_students
   file.close
 end
 
+def try_load_students
+  filename = ARGV[0]
+  return if filename.nil?
+  if File.exists?(filename)
+    load_students(filename)
+    puts "Loaded #{@students.count} students from #{filename}"
+  else
+    puts "Sorry #{filename} doesn't exist."
+    exit
+  end
+end
+
+try_load_students
 interactive_menu
 #@students = input_students
 #print_header
