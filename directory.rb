@@ -3,24 +3,22 @@
 def input_students
   puts "Please enter name followed by cohort month, to finish just hit return twice".center(120)
   puts "Please enter the name of the student".center(120)
-   name = gets.capitalize
-   name = name.gsub(/\n/," ").strip
+  name = gets.chomp.capitalize
 
 	date_correct = false
 
   if name.empty?
-    print_students####################
+    print_students
   end
 
 	while date_correct == false
 	 	puts "Please enter a cohort month using no abbreviations".center(120)
-  		cohort = gets.capitalize
-      cohort = cohort.gsub(/\n/," ").strip
+  		cohort = gets.chomp.capitalize
 		require 'date'
       if Date::MONTHNAMES.include? cohort
  	 			date_correct = true
 			end
-		end
+	end
 
 	date_correct = false
 
@@ -29,13 +27,11 @@ def input_students
         if @students.length == 1
           puts "Now we have #{@students.count} student".center(120)
           puts "Please enter the name of the student".center(120)
-          name = gets.capitalize
-          name = name.gsub(/\n/," ").strip
+          name = gets.chomp.capitalize
         else
           puts "Now we have #{@students.count} students".center(120)
     	    puts "Please enter the name of the student".center(120)
-    	    name = gets.capitalize
-          name = name.gsub(/\n/," ").strip
+    	    name = gets.chomp.capitalize
         end
     	if name.empty?
     		break
@@ -66,6 +62,8 @@ def process(selection)
     input_students
   when "2"
     show_students
+  when "3"
+    save_students
   when "9"
     exit
   else
@@ -77,6 +75,7 @@ def print_menu
   puts "What would you like to do?"
   puts "1. Input students"
   puts "2. Show students"
+  puts "3. Save the list to students.csv"
   puts "9. Exit"
 end
 
@@ -155,6 +154,16 @@ end
 def print_footer
   puts "Overall, we have #{@students.count} great students".center(120) #but above are those with names
   #puts of less than 12 characters (and filtered by first name letter if you selected that option).".center(120)
+end
+
+def save_students
+  file = File.open("students.csv", "w")
+  @students.each do |student|
+    student_data = [student[:name], student[:cohort]]
+    csv_line = student_data.join(",")
+    file.puts csv_line
+  end
+  file.close
 end
 
 interactive_menu
