@@ -1,4 +1,27 @@
+def interactive_menu
+  students= []
+  loop do
+    puts "What would you like to do?"
+    puts "1. Input students"
+    puts "2. Show students"
+    puts "9. Exit"
 
+    selection = gets.chomp.downcase
+
+    case selection
+    when "1"
+      students = input_students
+    when "2"
+      print_header
+      print_students(students)
+      print_footer(students)
+    when "9"
+      exit
+    else
+      "I don't know what you mean, please try again"
+    end
+  end
+end
 
 def input_students
   puts "Please enter name followed by cohort month, to finish just hit return twice".center(120)
@@ -126,8 +149,9 @@ def print_footer(students)
   #puts of less than 12 characters (and filtered by first name letter if you selected that option).".center(120)
 end
 
-students = input_students
-print_header
+interactive_menu
+#students = input_students
+#print_header
 #short_names(students, students_with_short_names)
-print_students(students)
-print_footer(students)
+#print_students(students)
+#print_footer(students)
