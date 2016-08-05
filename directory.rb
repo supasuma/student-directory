@@ -70,7 +70,14 @@ def process(selection)
   when "3"
     save_students
   when "4"
-    load_students
+    puts "Please enter file name, otherwise hit enter and 'students.csv' will be loaded by default"
+    filename = gets.chomp
+
+    if filename.empty?
+      load_students("students.csv")
+    else
+      load_students(filename)
+    end
   when "9"
     exit
   else
@@ -82,8 +89,8 @@ def print_menu
   puts "What would you like to do?"
   puts "1. Input students"
   puts "2. Show students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Where would you like to save your list?"
+  puts "4. Which list would you like to load?"
   puts "9. Exit"
 end
 
@@ -99,26 +106,8 @@ def print_header
   puts "-------------".center(120)
 end
 
-#students_with_short_names = []
-
-#def short_names (students, students_with_short_names)
-#  students.each do |student|
-#    if student[:name].length < 12
-#        students_with_short_names << student
-#push all names shorter than 12 to new array to be passed to print_students
-#if name is longer than 12 do nothing with the name
-#    end
-#  end
-#end
-
 def print_students
-# puts "Would you like to filter students by the letter of their first name?".center(120)
-# puts "If so, please enter the letter, otherwise hit enter".center(120)
-# letter = STDIN.gets.chomp.upcase
-# 	if !letter.empty?
-#  		filter_by_letter(@students, letter)
 
-#  else
   if @students.count == 1
     puts "1. #{@students[0][:name]} (#{@students[0][:cohort]} cohort)".center(120)
   elsif @students.count >= 2
@@ -147,47 +136,41 @@ def print_students
   end
 end
 
-#def filter_by_letter(@students, letter)
-#	counter = 0
-#	while @students.length >= counter+1
-#		if @students[counter][:name].start_with?(letter)
-#           puts "#{counter+1}. #{@students[0+counter][:name]} (#{@students[0+counter][:cohort]} cohort)".center(120)
-#           puts
-#        end
-#    counter+=1
-#    end
-#end
-
-#FInally we print the overall total of students
 def print_footer
-  puts "Overall, we have #{@students.count} great students".center(120) #but above are those with names
-  #puts of less than 12 characters (and filtered by first name letter if you selected that option).".center(120)
+  puts "Overall, we have #{@students.count} great students".center(120)
 end
 
 def save_students
-  file = File.open("students.csv", "w")
+  puts "Please enter the file name you would like to save this list to"
+  filename = gets.chomp
+  
+  file = File.open(filename, "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
     csv_line = student_data.join(",")
     file.puts csv_line
   end
   file.close
+  puts "Students saved"
 end
 
-def load_students (filename = "students.csv")
+def load_students (filename)
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort = line.chomp.split(",")
     students_to_list(name, cohort)
     #@students << {name: name, cohort: cohort.to_sym}
   end
+  puts "Loaded #{@students.count} students from #{filename}"
   file.close
 end
 
 def try_load_students
   filename = ARGV[0]
-  return if filename.nil?
-  if File.exists?(filename)
+  #return if filename.nil?
+  if filename == nil
+    load_students("students.csv")
+  elsif File.exists?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} students from #{filename}"
   else
@@ -196,10 +179,5 @@ def try_load_students
   end
 end
 
-try_load_students
+#try_load_students
 interactive_menu
-#@students = input_students
-#print_header
-#short_names(@students, students_with_short_names)
-#print_students(@students)
-#print_footer(@students)
