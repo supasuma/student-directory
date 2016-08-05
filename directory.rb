@@ -70,14 +70,7 @@ def process(selection)
   when "3"
     save_students
   when "4"
-    puts "Please enter file name, otherwise hit enter and 'students.csv' will be loaded by default"
-    filename = gets.chomp
-
-    if filename.empty?
-      load_students("students.csv")
-    else
-      load_students(filename)
-    end
+    select_file
   when "9"
     exit
   else
@@ -143,7 +136,7 @@ end
 def save_students
   puts "Please enter the file name you would like to save this list to"
   filename = gets.chomp
-  
+
   file = File.open(filename, "w")
   @students.each do |student|
     student_data = [student[:name], student[:cohort]]
@@ -152,6 +145,19 @@ def save_students
   end
   file.close
   puts "Students saved"
+end
+
+def select_file
+  puts "Please enter file name, otherwise hit enter and 'students.csv' will be loaded by default"
+  filename = gets.chomp
+
+  if filename.empty?
+    load_students("students.csv")
+  elsif
+    load_students(filename)
+  else
+    "sorry, file name doesn't exist"
+  end
 end
 
 def load_students (filename)
@@ -167,10 +173,9 @@ end
 
 def try_load_students
   filename = ARGV[0]
-  #return if filename.nil?
-  if filename == nil
-    load_students("students.csv")
-  elsif File.exists?(filename)
+  return if filename.nil?
+
+  if File.exists?(filename)
     load_students(filename)
     puts "Loaded #{@students.count} students from #{filename}"
   else
@@ -179,5 +184,5 @@ def try_load_students
   end
 end
 
-#try_load_students
+try_load_students
 interactive_menu
