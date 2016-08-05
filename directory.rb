@@ -82,8 +82,8 @@ def print_menu
   puts "What would you like to do?"
   puts "1. Input students"
   puts "2. Show students"
-  puts "3. Where would you like to save your list?"
-  puts "4. Which list would you like to load?"
+  puts "3. Save students to a file"
+  puts "4. Load a saved file"
   puts "9. Exit"
 end
 
@@ -137,18 +137,18 @@ def save_students
   puts "Please enter the file name you would like to save this list to"
   filename = gets.chomp
 
-  file = File.open(filename, "w")
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  File.open(filename, "w") do |f|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      f.puts csv_line
+    end
   end
-  file.close
-  puts "Students saved"
+  puts "You have #{@students.count} students saved"
 end
 
 def select_file
-  puts "Please enter file name, otherwise hit enter and 'students.csv' will be loaded by default"
+  puts "Please enter file name you'd like to load, otherwise hit enter and 'students.csv' will be loaded by default"
   filename = gets.chomp
 
   if filename.empty?
@@ -161,15 +161,24 @@ def select_file
 end
 
 def load_students (filename)
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort = line.chomp.split(",")
-    students_to_list(name, cohort)
-    #@students << {name: name, cohort: cohort.to_sym}
-  end
+  File.open(filename, "r") do |f|
+    while line = f.gets
+      name, cohort = line.chomp.split(",")
+      students_to_list(name, cohort)
+    end
   puts "Loaded #{@students.count} students from #{filename}"
-  file.close
+  end
 end
+
+#def load_students (filename)
+#  file = File.open(filename, "r")
+#  file.readlines.each do |line|
+#    name, cohort = line.chomp.split(",")
+#    students_to_list(name, cohort)
+#  end
+#  puts "Loaded #{@students.count} students from #{filename}"
+  #file.close
+#end
 
 def try_load_students
   filename = ARGV[0]
