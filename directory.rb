@@ -134,16 +134,24 @@ def print_footer
 end
 
 def save_students
-  puts "Please enter the file name you would like to save this list to"
+  puts "Please enter the csv file name you would like to save this list to"
   filename = gets.chomp
-
-  File.open(filename, "w") do |f|
-    @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      f.puts csv_line
+  require 'csv'
+    CSV.open(filename, "w") do |csv|
+      @students.each do |student|
+        student_data = [student[:name], student[:cohort]]
+        # removed this line of code as CSV files take the information in arrays "csv_line = student_data.join(",")"
+        csv.puts student_data
+      end
     end
-  end
+
+  #File.open(filename, "w") do |f|
+  #  @students.each do |student|
+  #    student_data = [student[:name], student[:cohort]]
+  #    csv_line = student_data.join(",")
+  #    f.puts csv_line
+  #  end
+  #end
   puts "You have #{@students.count} students saved"
 end
 
@@ -161,23 +169,22 @@ def select_file
 end
 
 def load_students (filename)
-  File.open(filename, "r") do |f|
-    while line = f.gets
-      name, cohort = line.chomp.split(",")
-      students_to_list(name, cohort)
-    end
-  puts "Loaded #{@students.count} students from #{filename}"
+  require 'csv'
+  CSV.foreach(filename) do |row|
+    name, cohort = row.join(",").chomp.split(",")
+    students_to_list(name, cohort)
   end
+puts "Loaded #{@students.count} students from #{filename}"
 end
 
 #def load_students (filename)
-#  file = File.open(filename, "r")
-#  file.readlines.each do |line|
-#    name, cohort = line.chomp.split(",")
-#    students_to_list(name, cohort)
-#  end
+#  File.open(filename, "r") do |f|
+#    while line = f.gets
+#      name, cohort = line.chomp.split(",")
+#      students_to_list(name, cohort)
+#    end
 #  puts "Loaded #{@students.count} students from #{filename}"
-  #file.close
+#  end
 #end
 
 def try_load_students
