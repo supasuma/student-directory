@@ -72,7 +72,8 @@ def process(selection)
   when "4"
     select_file
   when "9"
-    exit
+    called_script
+    #exit
   else
     puts "I don't know what you mean, please try again"
   end
@@ -135,7 +136,7 @@ end
 
 def save_students
   puts "Please enter the csv file name you would like to save this list to"
-  filename = gets.chomp
+  filename = STDIN.gets.chomp
   require 'csv'
     CSV.open(filename, "w") do |csv|
       @students.each do |student|
@@ -157,14 +158,16 @@ end
 
 def select_file
   puts "Please enter file name you'd like to load, otherwise hit enter and 'students.csv' will be loaded by default"
-  filename = gets.chomp
+  filename = STDIN.gets.chomp
 
   if filename.empty?
     load_students("students.csv")
   elsif
+    File.exists?(filename)
     load_students(filename)
   else
-    "sorry, file name doesn't exist"
+    puts "Sorry, #{filename} doesn't exist"
+    exit
   end
 end
 
@@ -199,6 +202,11 @@ def try_load_students
     exit
   end
 end
+
+#def called_script
+#  puts File.basename(__FILE__)
+#  exit
+#end
 
 try_load_students
 interactive_menu
