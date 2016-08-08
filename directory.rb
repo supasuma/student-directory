@@ -5,35 +5,18 @@ def input_students
   puts "Please enter the name of the student".center(120)
   name = STDIN.gets.chomp.capitalize
 
-	date_correct = false
-
-  #return print_students
-  #return print_students if name.empty?
-  #while name.empty?
-    #break
-  #end
+  return puts "You have entered no students".center(120) if name.empty?
 
   cohort = cohort_month
 
 	while !name.empty?
-      students_to_list(name, cohort)
-        if @students.length == 1
-          puts "Now we have #{@students.count} student".center(120)
-          puts "Please enter the name of the student".center(120)
-          name = STDIN.gets.chomp.capitalize
-        else
-          puts "Now we have #{@students.count} students".center(120)
-    	    puts "Please enter the name of the student".center(120)
-    	    name = STDIN.gets.chomp.capitalize
-        end
-        if name.empty?
-      		break
-      	end
-      cohort = cohort_month
-
-      #break
-	end
-
+    students_to_list(name, cohort)
+    @students.length == 1 ? (puts "Now we have #{@students.count} student".center(120)) : (puts "Now we have #{@students.count} students".center(120))
+    puts "Please enter the name of the student".center(120)
+    name = STDIN.gets.chomp.capitalize
+    return if name.empty?
+    cohort = cohort_month
+  end
 end
 
 def cohort_month
@@ -107,7 +90,6 @@ def print_students
     answer = STDIN.gets.chomp.upcase
       if answer == "YES"
         cohort_groups = []
-        puts @students
         cohort_groups << @students.group_by { |student| student[:cohort] }
 
           cohort_groups[0].each do |k,v|
