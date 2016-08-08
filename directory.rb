@@ -95,14 +95,12 @@ def print_students
   answer = STDIN.gets.chomp.upcase
   return filter_students if answer == "YES"
 
-  if answer.empty?
-    if @students.count >= 1
+  if answer.empty? && @students.count >= 1
       @students.each.with_index(1) do |student, i|
         puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort)".center(120)
       end
-    else
-      puts "There are no students to print".center(120)
-    end
+  else
+    puts "There are no students to print".center(120)
   end
 end
 
