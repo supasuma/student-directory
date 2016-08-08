@@ -28,7 +28,6 @@ date_correct = false
     Date::MONTHNAMES.include?(cohort) ? date_correct = true : date_correct = false
 	end
   return cohort
-		#date_correct = false
 end
 
 def students_to_list (name, cohort)
@@ -53,8 +52,7 @@ def process(selection)
   when "4"
     select_file
   when "9"
-    called_script
-    #exit
+    exit
   else
     puts "I don't know what you mean, please try again"
   end
@@ -81,32 +79,30 @@ def print_header
   puts "-------------".center(120)
 end
 
-def print_students
-
-  if @students.count == 1
-    puts "1. #{@students[0][:name]} (#{@students[0][:cohort]} cohort)".center(120)
-  elsif @students.count >= 2
-    puts "If you would you like to filter by cohort please type 'yes', otherwise hit return".center(120)
-    answer = STDIN.gets.chomp.upcase
-      if answer == "YES"
-        cohort_groups = []
-        cohort_groups << @students.group_by { |student| student[:cohort] }
-
-          cohort_groups[0].each do |k,v|
-     	        puts k.to_s.capitalize.center(120)
-    		        v.each_with_index do |x, i|
-    			           puts (x[:name] + " (" + k.to_s.capitalize + " cohort)").center(120)
-    		        end
-              end
-      else
-      counter = 0
-        while @students.length >= counter+1
-          puts "#{counter+1}. #{@students[counter][:name]} (#{@students[counter][:cohort]} cohort)".center(120)
-          counter+=1
-        end
+def filter_students
+  cohort_groups = []
+  cohort_groups << @students.group_by { |student| student[:cohort] }
+  cohort_groups[0].each do |k,v|
+    puts k.to_s.capitalize.center(120)
+      v.each do |x|
+        puts (x[:name] + " (" + k.to_s.capitalize + " cohort)").center(120)
       end
-  else
-    puts "There are no students to print".center(120)
+  end
+end
+
+def print_students
+  puts "Would you like to filter by cohort please type 'yes', otherwise hit return".center(120)
+  answer = STDIN.gets.chomp.upcase
+  return filter_students if answer == "YES"
+
+  if answer.empty?
+    if @students.count >= 1
+      @students.each.with_index(1) do |student, i|
+        puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort)".center(120)
+      end
+    else
+      puts "There are no students to print".center(120)
+    end
   end
 end
 
@@ -182,11 +178,6 @@ def try_load_students
     exit
   end
 end
-
-#def called_script
-#  puts File.basename(__FILE__)
-#  exit
-#end
 
 try_load_students
 interactive_menu
