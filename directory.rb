@@ -7,24 +7,16 @@ def input_students
 
 	date_correct = false
 
-  if name.empty?
-    print_students
-  end
+  #return print_students
+  #return print_students if name.empty?
+  #while name.empty?
+    #break
+  #end
 
-	while date_correct == false
-	 	puts "Please enter a cohort month using no abbreviations".center(120)
-  		cohort = STDIN.gets.chomp.capitalize
-		require 'date'
-      if Date::MONTHNAMES.include? cohort
- 	 			date_correct = true
-			end
-	end
-
-	date_correct = false
+  cohort = cohort_month
 
 	while !name.empty?
       students_to_list(name, cohort)
-    	#@students << {name: name, cohort: cohort.to_sym}
         if @students.length == 1
           puts "Now we have #{@students.count} student".center(120)
           puts "Please enter the name of the student".center(120)
@@ -34,20 +26,26 @@ def input_students
     	    puts "Please enter the name of the student".center(120)
     	    name = STDIN.gets.chomp.capitalize
         end
-    	if name.empty?
-    		break
-    	end
-    		while date_correct == false
-	 			puts "Please enter a cohort month using no abbreviations".center(120)
-  				cohort = STDIN.gets.capitalize
-          cohort = cohort.gsub(/\n/," ").strip
-				require 'date'
-					if Date::MONTHNAMES.include? cohort
-						date_correct = true
-					end
-			  end
-			date_correct = false
+        if name.empty?
+      		break
+      	end
+      cohort = cohort_month
+
+      #break
 	end
+
+end
+
+def cohort_month
+date_correct = false
+  while date_correct == false
+		puts "Please enter a cohort month using no abbreviations".center(120)
+		cohort = STDIN.gets.chomp.capitalize
+    require 'date'
+    Date::MONTHNAMES.include?(cohort) ? date_correct = true : date_correct = false
+	end
+  return cohort
+		#date_correct = false
 end
 
 def students_to_list (name, cohort)
