@@ -96,9 +96,9 @@ def print_students
   return filter_students if answer == "YES"
 
   if answer.empty? && @students.count >= 1
-      @students.each.with_index(1) do |student, i|
-        puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort)".center(120)
-      end
+    @students.each.with_index(1) do |student, i|
+      puts "#{i}. #{student[:name]} (#{student[:cohort]} cohort)".center(120)
+    end
   else
     puts "There are no students to print".center(120)
   end
@@ -134,10 +134,9 @@ def select_file
   puts "Please enter file name you'd like to load, otherwise hit enter and 'students.csv' will be loaded by default"
   filename = STDIN.gets.chomp
 
-  if filename.empty?
-    load_students("students.csv")
-  elsif
-    File.exists?(filename)
+  return load_students("students.csv") if filename.empty?
+
+  if File.exists?(filename)
     load_students(filename)
   else
     puts "Sorry, #{filename} doesn't exist"
